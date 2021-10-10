@@ -5,6 +5,7 @@ import dev.danodic.rushbeat.livenumbers.LiveNumber;
 /**
  * A number that can be set to a given target value and its actual value will
  * interpolate from the current value up to the target value.
+ *
  * @author danodic
  */
 public class Interpolator extends Number implements Comparable<LiveNumber>, LiveNumber {
@@ -16,9 +17,29 @@ public class Interpolator extends Number implements Comparable<LiveNumber>, Live
     public Interpolator() {
         this(0.1d);
     }
+    
+    public Interpolator(LiveNumber number) {
+        this(number.doubleValue(), 1d, 0d);
+    }
+    
+    public Interpolator(Float step) {
+        this(step.doubleValue(), 1d, 0d);
+    }
+
+    public Interpolator(Integer step) {
+        this(step.doubleValue(), 1d, 0d);
+    }
 
     public Interpolator(Double step) {
         this(step, 1d, 0d);
+    }
+
+    public Interpolator(Float step, Float targetValue, Float currentValue) {
+        this(step.doubleValue(), targetValue.doubleValue(), currentValue.doubleValue());
+    }
+
+    public Interpolator(Integer step, Integer targetValue, Integer currentValue) {
+        this(step.doubleValue(), targetValue.doubleValue(), currentValue.doubleValue());
     }
 
     public Interpolator(Double step, Double targetValue, Double currentValue) {
@@ -27,8 +48,43 @@ public class Interpolator extends Number implements Comparable<LiveNumber>, Live
         this.step = step;
     }
 
-    public void interpolate() {
-        value = value + step * (targetValue - value);
+    public Interpolator setStep(LiveNumber number) {
+        return setStep(number.doubleValue());
+    }
+
+    public Interpolator setStep(Float step) {
+        return setStep(step.doubleValue());
+    }
+
+    public Interpolator setStep(Integer step) {
+        return setStep(step.doubleValue());
+    }
+
+    public Interpolator setStep(Double step) {
+        this.step = step;
+        return this;
+    }
+
+    public Interpolator setValue(LiveNumber number) {
+        return setValue(number.doubleValue());
+    }
+
+    public Interpolator setValue(Float value) {
+        return setValue(value.doubleValue());
+    }
+
+    public Interpolator setValue(Integer value) {
+        return setValue(value.doubleValue());
+    }
+
+    public Interpolator setValue(Double value) {
+        this.value = value;
+        return this;
+    }
+
+    public Interpolator setTargetValue(Double targetValue) {
+        this.targetValue = targetValue;
+        return this;
     }
 
     public Interpolator add(Integer value) {
@@ -139,17 +195,23 @@ public class Interpolator extends Number implements Comparable<LiveNumber>, Live
     @Override
     public void update() {
         if (Double.compare(value, targetValue) != 0) {
-            if(targetValue > value) {
+            if (targetValue > value) {
                 value += step;
             }
-            
-            if(targetValue < value) {
+
+            if (targetValue < value) {
                 value -= step;
             }
-            
-            if(Math.abs(value - targetValue) < step) {
+
+            if (Math.abs(value - targetValue) < step) {
                 value = targetValue;
             }
         }
     }
+
+    @Override
+    public boolean isDone() {
+        return Double.compare(value, targetValue) == 0;
+    }
+
 }

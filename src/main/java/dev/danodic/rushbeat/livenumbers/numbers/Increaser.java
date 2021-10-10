@@ -6,6 +6,7 @@ import dev.danodic.rushbeat.livenumbers.LiveNumber;
  * A number that can be set to a given value and it will increase until it
  * reaches its minium value. A maximum value can be defined, so it will be
  * clamped between minimum and maximum
+ *
  * @author danodic
  */
 public class Increaser extends Number implements Comparable<LiveNumber>, LiveNumber {
@@ -18,23 +19,79 @@ public class Increaser extends Number implements Comparable<LiveNumber>, LiveNum
     public Increaser() {
         this(0.1d);
     }
-    
+
     public Increaser(Double step) {
         this(step, 1d);
     }
-    
+
     public Increaser(Double step, Double maximum) {
         this(step, maximum, null);
     }
-    
+
     public Increaser(Double step, Double maximum, Double minimum) {
+        this.step = step;
         this.value = 0d;
         this.minimum = minimum;
         this.maximum = maximum;
     }
 
+    public Increaser setStep(Integer step) {
+        setStep(step.doubleValue());
+        return this;
+    }
+
+    public Increaser setStep(Float step) {
+        setStep(step.doubleValue());
+        return this;
+    }
+
+    public Increaser setStep(LiveNumber step) {
+        setStep(step.doubleValue());
+        return this;
+    }
+
     public Increaser setStep(Double step) {
         this.step = step;
+        return this;
+    }
+
+    public Increaser setMinimum(Integer minimum) {
+        setMinimum(minimum.doubleValue());
+        return this;
+    }
+
+    public Increaser setMinimum(Float minimum) {
+        setMinimum(minimum.doubleValue());
+        return this;
+    }
+
+    public Increaser setMinimum(LiveNumber minimum) {
+        setMinimum(minimum.doubleValue());
+        return this;
+    }
+
+    public Increaser setMinimum(Double minimum) {
+        this.minimum = minimum;
+        return this;
+    }
+
+    public Increaser setMaximum(Integer maximum) {
+        setMaximum(maximum.doubleValue());
+        return this;
+    }
+
+    public Increaser setMaximum(Float maximum) {
+        setMaximum(maximum.doubleValue());
+        return this;
+    }
+
+    public Increaser setMaximum(LiveNumber maximum) {
+        setMaximum(maximum.doubleValue());
+        return this;
+    }
+
+    public Increaser setMaximum(Double maximum) {
+        this.maximum = maximum;
         return this;
     }
 
@@ -54,7 +111,7 @@ public class Increaser extends Number implements Comparable<LiveNumber>, LiveNum
     }
 
     public Increaser add(Double value) {
-        if(minimum!=null) {
+        if (minimum != null) {
             this.value = clamp(this.value + value);
         } else {
             this.value += value;
@@ -78,7 +135,7 @@ public class Increaser extends Number implements Comparable<LiveNumber>, LiveNum
     }
 
     public Increaser multiply(Double value) {
-        if(minimum!=null) {
+        if (minimum != null) {
             this.value = clamp(this.value * value);
         } else {
             this.value *= value;
@@ -102,7 +159,7 @@ public class Increaser extends Number implements Comparable<LiveNumber>, LiveNum
     }
 
     public Increaser divide(Double value) {
-        if(minimum!=null) {
+        if (minimum != null) {
             this.value = clamp(this.value / value);
         } else {
             this.value /= value;
@@ -168,6 +225,11 @@ public class Increaser extends Number implements Comparable<LiveNumber>, LiveNum
     @Override
     public int compareTo(LiveNumber other) {
         return Double.compare(value, other.doubleValue());
+    }
+
+    @Override
+    public boolean isDone() {
+        return Double.compare(value, maximum) == 0;
     }
 
 }

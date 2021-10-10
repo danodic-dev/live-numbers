@@ -7,5 +7,8 @@ package dev.danodic.rushbeat.livenumbers;
 public interface LiveNumber {
 
     public void update();
+
     public double doubleValue();
+
+    public boolean isDone();
 }
